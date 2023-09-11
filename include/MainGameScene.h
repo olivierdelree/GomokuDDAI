@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <QImage>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPaintEvent>
@@ -18,7 +19,10 @@ private:
     int m_axis_count { 15 };
     int m_axis_spacing;
     double m_stone_radius;
-    QList<QPoint> m_list_of_crosses {};
+
+    QList<QPoint> m_stone_coordinates {};
+    QImage m_black_stone { QString("../assets/black_piece_sprite.png") };
+    QImage m_white_stone { QString("../assets/white_piece_sprite.png") };
 
 signals:
     void requestedMainMenuScene();
