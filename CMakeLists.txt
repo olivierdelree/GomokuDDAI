@@ -6,7 +6,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-
 find_package(Qt6Widgets REQUIRED)
 
 include_directories("include")
@@ -18,9 +17,9 @@ add_executable(GomokuDDAI
         src/MainMenuScene.cpp
         include/MainMenuScene.h
         src/MainGameScene.cpp
-        include/MainGameScene.h)
-target_link_libraries(GomokuDDAI PRIVATE Qt6::Widgets
+        include/MainGameScene.h
 )
+target_link_libraries(GomokuDDAI PRIVATE Qt6::Widgets)
 set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"

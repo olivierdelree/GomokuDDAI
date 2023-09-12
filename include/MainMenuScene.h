@@ -2,27 +2,31 @@
 // Created by grump on 09/09/2023.
 //
 
-#pragma once
+#ifndef GOMOKUDDAI_MAINMENUSCENE_H
+#define GOMOKUDDAI_MAINMENUSCENE_H
 
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
 
-class MainMenuScene : public QWidget {
+class MainMenuScene : public QWidget
+{
     Q_OBJECT
 
+public:
+    explicit MainMenuScene(QWidget *parent = nullptr);
+
 private:
-    QVBoxLayout* m_layout;
-    QPushButton* m_button_play;
-    QPushButton* m_button_console;
-    QPushButton* m_button_quit;
+    QVBoxLayout *mLayout;
+    QPushButton *mButtonPlay;
+    QPushButton *mButtonConsole;
+    QPushButton *mButtonQuit;
 
 signals:
     void requestedMainGameScene();
 
 public slots:
     static void startConsole();
-
-public:
-    explicit MainMenuScene(QWidget* parent = nullptr);
 };
+
+#endif // GOMOKUDDAI_MAINMENUSCENE_H

@@ -2,7 +2,8 @@
 // Created by grump on 09/09/2023.
 //
 
-#pragma once
+#ifndef GOMOKUDDAI_MAINGAMESCENE_H
+#define GOMOKUDDAI_MAINGAMESCENE_H
 
 #include <QImage>
 #include <QKeyEvent>
@@ -11,29 +12,32 @@
 #include <QPoint>
 #include <QWidget>
 
-class MainGameScene : public QWidget {
+class MainGameScene : public QWidget
+{
     Q_OBJECT
 
-private:
-    int m_margin { 50 };
-    int m_axis_count { 15 };
-    int m_axis_spacing;
-    double m_stone_radius;
+public:
+    explicit MainGameScene(QWidget *parent = nullptr);
 
-    QList<QPoint> m_stone_coordinates {};
-    QImage m_black_stone { QString("../assets/black_piece_sprite.png") };
-    QImage m_white_stone { QString("../assets/white_piece_sprite.png") };
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
+private:
+    int mMargin{ 50 };
+    int mAxisCount{ 15 };
+    int mAxisSpacing;
+    double mStoneRadius;
+
+    QList<QPoint> mStoneCoordinates{};
+    QImage mBlackStone{ QString("../assets/black_piece_sprite.png") };
+    QImage mWhiteStone{ QString("../assets/white_piece_sprite.png") };
 
 signals:
     void requestedMainMenuScene();
 
 public slots:
-    void keyPressEvent(QKeyEvent*) override;
-    void mousePressEvent(QMouseEvent*) override;
-
-public:
-    explicit MainGameScene(QWidget* parent = nullptr);
-
-protected:
-    void paintEvent(QPaintEvent* event) override;
+    void keyPressEvent(QKeyEvent *) override;
+    void mousePressEvent(QMouseEvent *) override;
 };
+
+#endif // GOMOKUDDAI_MAINGAMESCENE_H

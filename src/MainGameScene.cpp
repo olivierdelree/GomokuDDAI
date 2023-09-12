@@ -6,17 +6,16 @@
 #include <QPainter>
 #include <cmath>
 
-MainGameScene::MainGameScene(QWidget* parent)
-    : QWidget(parent)
+MainGameScene::MainGameScene(QWidget *parent) : QWidget(parent)
 {
-    m_axis_spacing = (parent->width() - 2 * m_margin) / (m_axis_count - 1);
-    m_stone_radius = m_axis_spacing / 2.5;
+    mAxisSpacing = (parent->width() - 2 * mMargin) / (mAxisCount - 1);
+    mStoneRadius = mAxisSpacing / 2.5;
 
-    m_black_stone = m_black_stone.scaled(2 * (int)m_stone_radius, 2 * (int)m_stone_radius);
-    m_white_stone = m_white_stone.scaled(2 * (int)m_stone_radius, 2 * (int)m_stone_radius);
+    mBlackStone = mBlackStone.scaled(2 * (int)mStoneRadius, 2 * (int)mStoneRadius);
+    mWhiteStone = mWhiteStone.scaled(2 * (int)mStoneRadius, 2 * (int)mStoneRadius);
 }
 
-void MainGameScene::keyPressEvent(QKeyEvent* event)
+void MainGameScene::keyPressEvent(QKeyEvent *event)
 {
     QWidget::keyPressEvent(event);
 
@@ -25,17 +24,21 @@ void MainGameScene::keyPressEvent(QKeyEvent* event)
     }
 }
 
-void MainGameScene::mousePressEvent(QMouseEvent* event)
+void MainGameScene::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
 
-    int intersection_coordinates[2] { -1, -1 };
+    int intersection_coordinates[2]{ -1, -1 };
     auto mouse_coordinates = event->pos();
 
-    int far_limit = m_margin + ((m_axis_count - 1) * m_axis_spacing);
-    for (int i { 0 }, x_intersection { m_margin }; x_intersection < far_limit + 1; i++, x_intersection = x_intersection + m_axis_spacing) {
-        for (int j { 0 }, y_intersection { m_margin }; y_intersection < far_limit + 1; j++, y_intersection = y_intersection + m_axis_spacing) {
-            if (std::pow((mouse_coordinates.x() - x_intersection), 2) + std::pow((mouse_coordinates.y() - y_intersection), 2) <= std::pow(m_stone_radius, 2)) {
+    int far_limit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
+    for (int i{ 0 }, x_intersection{ mMargin }; x_intersection < far_limit + 1;
+         i++, x_intersection = x_intersection + mAxisSpacing) {
+        for (int j{ 0 }, y_intersection{ mMargin }; y_intersection < far_limit + 1;
+             j++, y_intersection = y_intersection + mAxisSpacing) {
+            if (std::pow((mouse_coordinates.x() - x_intersection), 2)
+                        + std::pow((mouse_coordinates.y() - y_intersection), 2)
+                <= std::pow(mStoneRadius, 2)) {
                 intersection_coordinates[0] = i;
                 intersection_coordinates[1] = j;
             }
@@ -46,40 +49,40 @@ void MainGameScene::mousePressEvent(QMouseEvent* event)
     if (intersection_coordinates[0] == -1)
         return;
 
-    intersection_coordinates[0] = m_margin + intersection_coordinates[0] * 50;
-    intersection_coordinates[1] = m_margin + intersection_coordinates[1] * 50;
+    intersection_coordinates[0] = mMargin + intersection_coordinates[0] * 50;
+    intersection_coordinates[1] = mMargin + intersection_coordinates[1] * 50;
     QPoint stone_coordinates(intersection_coordinates[0], intersection_coordinates[1]);
 
-    bool spot_is_free { true };
-    for (int i { 0 }; i < m_stone_coordinates.count(); i++) {
-        if (stone_coordinates == m_stone_coordinates[i]) {
+    bool spot_is_free{ true };
+    for (int i{ 0 }; i < mStoneCoordinates.count(); i++) {
+        if (stone_coordinates == mStoneCoordinates[i]) {
             spot_is_free = false;
             break;
         }
     }
     if (spot_is_free) {
-        m_stone_coordinates.push_back(stone_coordinates);
+        mStoneCoordinates.push_back(stone_coordinates);
         QWidget::repaint();
     }
 }
 
-void MainGameScene::paintEvent(QPaintEvent* event)
+void MainGameScene::paintEvent(QPaintEvent *event)
 {
     QWidget::paintEvent(event);
 
     QPainter painter(this);
     painter.setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
 
-    int far_limit = m_margin + ((m_axis_count - 1) * m_axis_spacing);
-    for (int i { m_margin }; i < far_limit + 1; i = i + m_axis_spacing) {
-        painter.drawLine(i, m_margin, i, far_limit);
-        painter.drawLine(m_margin, i, far_limit, i);
+    int far_limit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
+    for (int i{ mMargin }; i < far_limit + 1; i = i + mAxisSpacing) {
+        painter.drawLine(i, mMargin, i, far_limit);
+        painter.drawLine(mMargin, i, far_limit, i);
     }
 
     int current_player_id = 1;
-    for (auto point: m_stone_coordinates) {
-        QPoint top_left(point.x() - (int)m_stone_radius, point.y() - (int)m_stone_radius);
-        auto* current_sprite = current_player_id == 1 ? &m_black_stone : &m_white_stone;
+    for (auto point : mStoneCoordinates) {
+        QPoint top_left(point.x() - (int)mStoneRadius, point.y() - (int)mStoneRadius);
+        auto *current_sprite = current_player_id == 1 ? &mBlackStone : &mWhiteStone;
         painter.drawImage(top_left, *current_sprite);
         current_player_id = -current_player_id;
     }
