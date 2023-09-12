@@ -57,10 +57,10 @@ void MainGameScene::mousePressEvent(QMouseEvent* event)
             break;
         }
     }
-    if (spot_is_free)
+    if (spot_is_free) {
         m_stone_coordinates.push_back(stone_coordinates);
-
-    QWidget::repaint();
+        QWidget::repaint();
+    }
 }
 
 void MainGameScene::paintEvent(QPaintEvent* event)
