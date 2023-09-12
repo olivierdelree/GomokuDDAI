@@ -14,7 +14,6 @@ class MainMenuScene : public QWidget {
 private:
     QVBoxLayout* m_layout;
     QPushButton* m_button_play;
-    QPushButton* m_button_settings;
     QPushButton* m_button_quit;
 
 signals:
