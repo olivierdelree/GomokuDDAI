@@ -10,7 +10,6 @@ Simply clone the repository to your own machine and create a symbolic link insid
 You will therefore need to install Qt on your own machine before being able to run the project.  
 
 ## Miscellaneous
-This repo follows the same style guide as [SerenityOS](https://github.com/SerenityOS/serenity/blob/master/Documentation/CodingStyle.md) (which is where `.clang-format` came from) except when working with signals and slots to maintain a more Qt-like approach.  
-This could become quite confusing in the future when the project grows. Therefore, a future commit will most likely switch the coding style to be entirely [Qt-based](https://wiki.qt.io/Qt_Coding_Style) to keep a more focused style for the whole project.  
+This repo follows the same [Qt style guide](https://wiki.qt.io/Qt_Coding_Style).  
 
-Additionally, this project is still in its infancy and does not have a license. In the next few commits, one will be added to reflect [what is required by Qt](https://www.qt.io/download-open-source) to use their library in an open source project.
+Additionally, this project is licensed under the GNU General Public License [as required by Qt](https://www.qt.io/download-open-source) when using their library in an open source project.
