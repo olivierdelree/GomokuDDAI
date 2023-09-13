@@ -30,36 +30,36 @@ void MainGameScene::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
 
-    int intersection_coordinates[2]{ -1, -1 };
-    auto mouse_coordinates = event->pos();
+    int intersectionCoordinates[2]{ -1, -1 };
+    auto mouseCoordinates = event->pos();
 
-    int far_limit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
-    for (int i{ 0 }, x_intersection{ mMargin }; x_intersection < far_limit + 1; i++, x_intersection = x_intersection + mAxisSpacing) {
-        for (int j{ 0 }, y_intersection{ mMargin }; y_intersection < far_limit + 1; j++, y_intersection = y_intersection + mAxisSpacing) {
-            if (std::pow((mouse_coordinates.x() - x_intersection), 2) + std::pow((mouse_coordinates.y() - y_intersection), 2) <= std::pow(mStoneRadius, 2)) {
-                intersection_coordinates[0] = i;
-                intersection_coordinates[1] = j;
+    int farLimit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
+    for (int i{ 0 }, xIntersection{ mMargin }; xIntersection < farLimit + 1; i++, xIntersection = xIntersection + mAxisSpacing) {
+        for (int j{ 0 }, yIntersection{ mMargin }; yIntersection < farLimit + 1; j++, yIntersection = yIntersection + mAxisSpacing) {
+            if (std::pow((mouseCoordinates.x() - xIntersection), 2) + std::pow((mouseCoordinates.y() - yIntersection), 2) <= std::pow(mStoneRadius, 2)) {
+                intersectionCoordinates[0] = i;
+                intersectionCoordinates[1] = j;
             }
         }
     }
 
     // The click wasn't on an intersection
-    if (intersection_coordinates[0] == -1)
+    if (intersectionCoordinates[0] == -1)
         return;
 
-    intersection_coordinates[0] = mMargin + intersection_coordinates[0] * 50;
-    intersection_coordinates[1] = mMargin + intersection_coordinates[1] * 50;
-    QPoint stone_coordinates(intersection_coordinates[0], intersection_coordinates[1]);
+    intersectionCoordinates[0] = mMargin + intersectionCoordinates[0] * 50;
+    intersectionCoordinates[1] = mMargin + intersectionCoordinates[1] * 50;
+    QPoint stoneCoordinates(intersectionCoordinates[0], intersectionCoordinates[1]);
 
-    bool spot_is_free{ true };
+    bool spotIsFree{ true };
     for (int i{ 0 }; i < mStoneCoordinates.count(); i++) {
-        if (stone_coordinates == mStoneCoordinates[i]) {
-            spot_is_free = false;
+        if (stoneCoordinates == mStoneCoordinates[i]) {
+            spotIsFree = false;
             break;
         }
     }
-    if (spot_is_free) {
-        mStoneCoordinates.push_back(stone_coordinates);
+    if (spotIsFree) {
+        mStoneCoordinates.push_back(stoneCoordinates);
         QWidget::repaint();
     }
 }
@@ -77,27 +77,27 @@ void MainGameScene::paintEvent(QPaintEvent *event)
     painter.setFont(axisFont);
     QFontMetrics axisFontMetrics{ axisFont };
 
-    int far_limit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
-    for (int i{ mMargin }; i < far_limit + 1; i = i + mAxisSpacing) {
+    int farLimit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
+    for (int i{ mMargin }; i < farLimit + 1; i = i + mAxisSpacing) {
         auto axisText = QString::number((i - mMargin) / mAxisSpacing);
         auto axisTextTightBoundingRect = axisFontMetrics.tightBoundingRect(axisText);
 
         // Vertical axes
-        painter.drawLine(i, mMargin, i, far_limit);
+        painter.drawLine(i, mMargin, i, farLimit);
         axisTextTightBoundingRect.moveCenter(QPoint(i, (mMargin / 3)));
         painter.drawText(axisTextTightBoundingRect, Qt::AlignCenter | Qt::TextDontClip, axisText);
 
         // Horizontal axes
-        painter.drawLine(mMargin, i, far_limit, i);
+        painter.drawLine(mMargin, i, farLimit, i);
         axisTextTightBoundingRect.moveCenter(QPoint((mMargin / 3), i));
         painter.drawText(axisTextTightBoundingRect, Qt::AlignCenter | Qt::TextDontClip, axisText);
     }
 
-    int current_player_id = 1;
+    int currentPlayerId = 1;
     for (auto point : mStoneCoordinates) {
-        QPoint top_left(point.x() - (int)mStoneRadius, point.y() - (int)mStoneRadius);
-        auto *current_sprite = current_player_id == 1 ? &mBlackStone : &mWhiteStone;
-        painter.drawImage(top_left, *current_sprite);
-        current_player_id = -current_player_id;
+        QPoint topLeft(point.x() - (int)mStoneRadius, point.y() - (int)mStoneRadius);
+        auto *currentSprite = currentPlayerId == 1 ? &mBlackStone : &mWhiteStone;
+        painter.drawImage(topLeft, *currentSprite);
+        currentPlayerId = -currentPlayerId;
     }
 }
