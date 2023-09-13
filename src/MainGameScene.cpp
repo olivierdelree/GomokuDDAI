@@ -5,6 +5,8 @@
 #include "MainGameScene.h"
 #include <QPainter>
 #include <cmath>
+#include <QFont>
+#include <QFontMetrics>
 
 MainGameScene::MainGameScene(QWidget *parent) : QWidget(parent)
 {
@@ -32,13 +34,9 @@ void MainGameScene::mousePressEvent(QMouseEvent *event)
     auto mouse_coordinates = event->pos();
 
     int far_limit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
-    for (int i{ 0 }, x_intersection{ mMargin }; x_intersection < far_limit + 1;
-         i++, x_intersection = x_intersection + mAxisSpacing) {
-        for (int j{ 0 }, y_intersection{ mMargin }; y_intersection < far_limit + 1;
-             j++, y_intersection = y_intersection + mAxisSpacing) {
-            if (std::pow((mouse_coordinates.x() - x_intersection), 2)
-                        + std::pow((mouse_coordinates.y() - y_intersection), 2)
-                <= std::pow(mStoneRadius, 2)) {
+    for (int i{ 0 }, x_intersection{ mMargin }; x_intersection < far_limit + 1; i++, x_intersection = x_intersection + mAxisSpacing) {
+        for (int j{ 0 }, y_intersection{ mMargin }; y_intersection < far_limit + 1; j++, y_intersection = y_intersection + mAxisSpacing) {
+            if (std::pow((mouse_coordinates.x() - x_intersection), 2) + std::pow((mouse_coordinates.y() - y_intersection), 2) <= std::pow(mStoneRadius, 2)) {
                 intersection_coordinates[0] = i;
                 intersection_coordinates[1] = j;
             }
@@ -73,10 +71,26 @@ void MainGameScene::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap));
 
+    QFont axisFont;
+    axisFont.setBold(true);
+    axisFont.setPixelSize(mMargin / 3);
+    painter.setFont(axisFont);
+    QFontMetrics axisFontMetrics{ axisFont };
+
     int far_limit = mMargin + ((mAxisCount - 1) * mAxisSpacing);
     for (int i{ mMargin }; i < far_limit + 1; i = i + mAxisSpacing) {
+        auto axisText = QString::number((i - mMargin) / mAxisSpacing);
+        auto axisTextTightBoundingRect = axisFontMetrics.tightBoundingRect(axisText);
+
+        // Vertical axes
         painter.drawLine(i, mMargin, i, far_limit);
+        axisTextTightBoundingRect.moveCenter(QPoint(i, (mMargin / 3)));
+        painter.drawText(axisTextTightBoundingRect, Qt::AlignCenter | Qt::TextDontClip, axisText);
+
+        // Horizontal axes
         painter.drawLine(mMargin, i, far_limit, i);
+        axisTextTightBoundingRect.moveCenter(QPoint((mMargin / 3), i));
+        painter.drawText(axisTextTightBoundingRect, Qt::AlignCenter | Qt::TextDontClip, axisText);
     }
 
     int current_player_id = 1;
